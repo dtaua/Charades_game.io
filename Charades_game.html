@@ -1,100 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr.Ts Observation & Inferences</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            padding: 50px;
-        }
-        button {
-            padding: 15px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .prompt {
-            font-size: 24px;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charades Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #charadesPrompt {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1 id="gameTitle">Charades Game</h1>
+    <button id="toggleLanguageButton">Español</button>
+    <div id="charadesPrompt"></div>
+    <button id="generatePromptButton">Generate Prompt</button>
+  </div>
 
-<div class="container">
-    <h1>Charades Game</h1>
-    <button onclick="generatePrompt()">Generate Charades Prompt</button>
-    <div class="prompt" id="charadesPrompt"></div>
-</div>
-
-<script>
-    const prompts = [
+  <script>
+    // Define prompts in English and Spanish
+    const prompts = {
+      english: [
         {
-            prompt: "A person is walking outside wearing a heavy coat, scarf, and gloves while shivering.",
-            action: "Act out: Wrapping arms around yourself, shivering, rubbing hands together.",
-            hints: "Hints: Pretend to see your breath, blow into hands, act like a cold wind is hitting you."
+          description: "A person is walking outside wearing a heavy coat, scarf, and gloves while shivering.",
+          actions: "Act out: Wrapping arms around yourself, shivering, rubbing hands together.",
+          hints: "Hints: Pretend to see your breath, blow into hands, act like a cold wind is hitting you."
         },
         {
-            prompt: "A student rushes into the classroom, breathing heavily, with their backpack half-zipped and papers sticking out.",
-            action: "Act out: Running in, gasping for air, adjusting a backpack, looking at an imaginary clock.",
-            hints: "Hints: Wipe imaginary sweat from forehead, mimic being startled by a bell ringing."
+          description: "A student rushes into the classroom, breathing heavily, with their backpack half-zipped and papers sticking out.",
+          actions: "Act out: Running in, gasping for air, adjusting a backpack, looking at an imaginary clock.",
+          hints: "Hints: Wipe imaginary sweat from forehead, mimic being startled by a bell ringing."
         },
         {
-            prompt: "Someone is sitting at a lunch table, holding their stomach and looking at an untouched tray of food.",
-            action: "Act out: Holding stomach, making a queasy face, pushing food away.",
-            hints: "Hints: Put a hand over your mouth like you're about to be sick, shake head at food."
+          description: "Someone is sitting at a lunch table, holding their stomach and looking at an untouched tray of food.",
+          actions: "Act out: Holding stomach, making a queasy face, pushing food away.",
+          hints: "Hints: Put a hand over your mouth like you're about to be sick, shake head at food."
         },
         {
-            prompt: "A person is standing outside with an umbrella, but they suddenly run for cover while looking up.",
-            action: "Act out: Standing with an imaginary umbrella, looking up, then running suddenly.",
-            hints: "Hints: Point up at the sky, act like something wet hits you, shake off 'rain' from clothes."
+          description: "A person is standing outside with an umbrella, but they suddenly run for cover while looking up.",
+          actions: "Act out: Standing with an imaginary umbrella, looking up, then running suddenly.",
+          hints: "Hints: Point up at the sky, act like something wet hits you, shake off 'rain' from clothes."
         },
         {
-            prompt: "Someone is watching a scary movie alone at night, sitting on the edge of their seat.",
-            action: "Act out: Sitting down, looking intensely at an invisible screen, jumping suddenly.",
-            hints: "Hints: Put hands on cheeks like you're scared, act like you hear a strange noise behind you."
+          description: "Someone is watching a scary movie alone at night, sitting on the edge of their seat.",
+          actions: "Act out: Sitting down, looking intensely at an invisible screen, jumping suddenly.",
+          hints: "Hints: Put hands on cheeks like you're scared, act like you hear a strange noise behind you."
         },
         {
-            prompt: "You walk into the classroom, and everyone is sitting quietly, looking at the board, while the teacher is standing with a serious expression.",
-            action: "Act out: Walking into a room, stopping suddenly, looking around nervously.",
-            hints: "Hints: Point at an imaginary clock, place a finger on lips for 'quiet,' fold arms like a strict teacher."
+          description: "You walk into the classroom, and everyone is sitting quietly, looking at the board, while the teacher is standing with a serious expression.",
+          actions: "Act out: Walking into a room, stopping suddenly, looking around nervously.",
+          hints: "Hints: Point at an imaginary clock, place a finger on lips for 'quiet,' fold arms like a strict teacher."
         },
         {
-            prompt: "You see a person running with an open umbrella, but the sun is shining and the sky is clear.",
-            action: "Act out: Running while holding an imaginary umbrella, looking over your shoulder, acting surprised.",
-            hints: "Hints: Mimic a strong wind pushing you, act like you're being chased by something."
+          description: "You see a person running with an open umbrella, but the sun is shining and the sky is clear.",
+          actions: "Act out: Running while holding an imaginary umbrella, looking over your shoulder, acting surprised.",
+          hints: "Hints: Mimic a strong wind pushing you, act like you're being chased by something."
         }
-    ];
+      ],
+      spanish: [
+        {
+          description: "Una persona camina afuera con un abrigo pesado, bufanda y guantes mientras tiembla.",
+          actions: "Actúa: Envuelve tus brazos alrededor de ti, tiembla, frota tus manos.",
+          hints: "Pistas: Pretende ver tu aliento, sopla en tus manos, actúa como si te golpeara un viento frío."
+        },
+        {
+          description: "Un estudiante entra corriendo al aula, respirando con dificultad, con su mochila medio cerrada y papeles saliendo.",
+          actions: "Actúa: Corre, jadea por aire, ajusta la mochila, mira un reloj imaginario.",
+          hints: "Pistas: Sécate el sudor imaginario de la frente, imita el sobresalto de un timbre sonando."
+        },
+        {
+          description: "Alguien está sentado en una mesa de almuerzo, sosteniéndose el estómago y mirando una bandeja de comida sin tocar.",
+          actions: "Actúa: Sostén el estómago, pon cara de náusea, empuja la comida.",
+          hints: "Pistas: Pon la mano sobre la boca como si fueras a vomitar, sacude la cabeza hacia la comida."
+        },
+        {
+          description: "Una persona está afuera con un paraguas, pero de repente corre a refugiarse mientras mira hacia arriba.",
+          actions: "Actúa: De pie con un paraguas imaginario, mirando hacia arriba, luego corriendo de repente.",
+          hints: "Pistas: Señala al cielo, actúa como si algo mojado te cayera, sacúdete la 'lluvia' de la ropa."
+        },
+        {
+          description: "Alguien está viendo una película de miedo solo por la noche, sentado al borde de su asiento.",
+          actions: "Actúa: Siéntate, mira intensamente una pantalla invisible, salta de repente.",
+          hints: "Pistas: Pon las manos sobre las mejillas como si tuvieras miedo, actúa como si escucharas un ruido extraño detrás de ti."
+        },
+        {
+          description: "Entras al aula y todos están sentados en silencio, mirando la pizarra, mientras el maestro está de pie con una expresión seria.",
+          actions: "Actúa: Entra a una habitación, detente de repente, mira alrededor nervioso.",
+          hints: "Pistas: Señala un reloj imaginario, pon un dedo sobre los labios para 'silencio', cruza los brazos como un maestro estricto."
+        },
+        {
+          description: "Ves a una persona corriendo con un paraguas abierto, pero el sol brilla y el cielo está despejado.",
+          actions: "Actúa: Corre sosteniendo un paraguas imaginario, mira por encima del hombro, actúa sorprendido.",
+          hints: "Pistas: Imita un viento fuerte empujándote, actúa como si te persiguiera algo."
+        }
+      ]
+    };
 
-    function generatePrompt() {
-        const randomIndex = Math.floor(Math.random() * prompts.length);
-        const randomPrompt = prompts[randomIndex];
-        document.getElementById('charadesPrompt').innerHTML = `
-            <strong>Prompt:</strong> ${randomPrompt.prompt}<br>
-            <strong>Action:</strong> ${randomPrompt.action}<br>
-            <strong>Hints:</strong> ${randomPrompt.hints}
-        `;
-    }
-</script>
+    // Track current language (default to English)
+    let currentLanguage = 'english';
 
+    // Function to toggle language
+    const toggleLanguage = () => {
+      currentLanguage = currentLanguage === 'english' ? 'spanish' : 'english';
+      document.getElementById('toggleLanguageButton').textContent = currentLanguage === 'english' ? 'Español' : 'English';
+      generatePrompt();  // Update prompt when language is toggled
+    };
+
+    // Function to generate a random prompt
+    const generatePrompt = () => {
+      const randomPrompt = prompts[currentLanguage][Math.floor(Math.random() * prompts[currentLanguage].length)];
+      
+      document.getElementById('charadesPrompt').innerHTML = `
+        <h2>${randomPrompt.description}</h2>
+        <p>${randomPrompt.actions}</p>
+        <p><strong>${currentLanguage === 'english' ? 'Hints' : 'Pistas'}:</strong> ${randomPrompt.hints}</p>
+      `;
+    };
+
+    // Event listeners
+    document.getElementById('toggleLanguageButton').addEventListener('click', toggleLanguage);
+    document.getElementById('generatePromptButton').addEventListener('click', generatePrompt);
+  </script>
 </body>
 </html>
